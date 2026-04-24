@@ -26,13 +26,19 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	input := r.FormValue("input")
-	
-	parsedInput := decoder.Decode(input)
-	// do somthing with the input here
+	inputType := r.FormValue("action")
+	output := ""
+
+	switch inputType {
+		case "Encode":
+			output = decoder.Encode(input)
+		case "Decode":
+			output = decoder.Decode(input)
+	}
 
 	data := Page{
 		Input: 	input,
-		Output: parsedInput,
+		Output: output,
 	}
 
 	tmpl, err := template.ParseFiles("index.html")

@@ -7,11 +7,12 @@
 <body>
 	<h1>Art decoder/encoder</h1>
 	<form method="POST" action="/">
-		<textarea name="input" rows="15" cols="30">{{.Input}}</textarea>
-		<input type="submit" value="Generate">
+		<textarea name="input" rows="40" cols="80">{{.Input}}</textarea>
+		<input type="submit" name="action" value="Decode">
+		<input type="submit" name="action" value="Encode">
 	</form>
 
-	<textarea name="output" rows="15" cols="30">{{.Output}}</textarea>
+	<textarea name="output" rows="40" cols="80">{{.Output}}</textarea>
 </body>
 
 </html>

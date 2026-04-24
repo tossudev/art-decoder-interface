@@ -74,6 +74,7 @@ func Encode(input string) string {
 			// end of input, no more duplicates can be found
 			if i+j >= len(input) {
 				output += buffer
+				skip++
 				break
 			}
 
