@@ -1,23 +1,21 @@
 package main
 
 import (
-	"net/http"
+	"interface/decoder"
 	"fmt"
-	//"io"
+	"net/http"
+	"html/template"
 )
+
+type Page struct {
+	Input string
+	Output string
+}
 
 
 func main() {
-	/*
-	handler := func(w http.ResponseWriter, req *http.Request) {
-		io.WriteString(w, "fuck you\n")
-	}
-	*/
-
-	http.HandleFunc("/input", FormHandler)
-	http.Handle("/", http.FileServer(http.Dir(".")))
+	http.HandleFunc("/", FormHandler)
 	http.ListenAndServe(":8080", nil)
-
 }
 
 
@@ -28,6 +26,19 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	input := r.FormValue("input")
+	
+	parsedInput := decoder.Decode(input)
+	// do somthing with the input here
 
-	fmt.Println(input)
+	data := Page{
+		Input: 	input,
+		Output: parsedInput,
+	}
+
+	tmpl, err := template.ParseFiles("index.html")
+	if err != nil {
+		fmt.Println("ERR:", err)
+	}
+
+	tmpl.Execute(w, data)
 }

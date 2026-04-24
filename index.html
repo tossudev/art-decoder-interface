@@ -6,10 +6,12 @@
 
 <body>
 	<h1>Art decoder/encoder</h1>
-	<form method="POST" action="/input">
-		<textarea name="input" rows="15" cols="30"></textarea>
-		<input type="submit" value="submit">
+	<form method="POST" action="/">
+		<textarea name="input" rows="15" cols="30">{{.Input}}</textarea>
+		<input type="submit" value="Generate">
 	</form>
+
+	<textarea name="output" rows="15" cols="30">{{.Output}}</textarea>
 </body>
 
 </html>
