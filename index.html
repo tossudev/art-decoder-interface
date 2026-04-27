@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 
 <html>
-<head>
-</head>
+	<head>
+		<link rel="stylesheet" type="text/css" href="static/style.css">
+	</head>
 
-<body>
-	<h1>Art decoder/encoder</h1>
-	<form method="POST" action="/">
-		<textarea name="input" rows="40" cols="80">{{.Input}}</textarea>
-		<input type="submit" name="action" value="Decode">
-		<input type="submit" name="action" value="Encode">
-	</form>
+	<body>
+		<div align="center">
+			<h1>Art decoder/encoder</h1>
+			<p>
+				A tool for compressing/decompressing ASCII art.<br>
+				Instructions and source on <a href="https://gitea.kood.tech/joonatanvahakangas/decoder">Github</a><br>
+			</p>
+			
+			<form method="POST" action="/">
+				<textarea name="input" rows="40" cols="80">{{.Input}}</textarea>
+				
+				<div>
+					<input type="submit" name="action" value="Decode">
+					<input type="submit" name="action" value="Encode">
+				</div>
 
-	<textarea name="output" rows="40" cols="80">{{.Output}}</textarea>
-</body>
+			</form>
+
+			<textarea name="output" rows="40" cols="80">{{.Output}}</textarea>
+		</div>
+	</body>
 
 </html>
