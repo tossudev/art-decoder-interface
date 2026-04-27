@@ -1,9 +1,8 @@
 # TODO
 
-html layout
-server
-	- create server and handle GET/POST
-	- update html
+GET & POST requests
+	- response code on website
 
-yea some styling css probably
-
+README
+bouns functionality
+	- compression percentage thing
