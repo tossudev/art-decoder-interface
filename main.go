@@ -10,6 +10,7 @@ import (
 type Page struct {
 	Input string
 	Output string
+	HttpResponse string
 }
 
 var pageData Page
@@ -19,13 +20,11 @@ func main() {
 	http.HandleFunc("/decoder", FormHandler)
 	http.HandleFunc("/", FrontendHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":6969", nil)
 }
 
 
 func FormHandler(w http.ResponseWriter, r *http.Request) {
-	if r.
-
 	if err := r.ParseForm(); err != nil {
 		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
@@ -34,20 +33,33 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 	input := r.FormValue("input")
 	inputType := r.FormValue("action")
 	output := ""
+	var err error
 
 	switch inputType {
 		case "Encode":
 			output = decoder.Encode(input)
 		case "Decode":
-			output = decoder.Decode(input)
+			err, output = decoder.Decode(input)
+	}
+
+	if err != nil {
+		output = ""
+		w.WriteHeader(400)
 	}
 
 	pageData = Page{
-		Input: 	input,
-		Output: output,
+		Input: 			input,
+		Output: 		output,
+		HttpResponse:	"Response status",
+		//HttpResponse:	r.Response.Status,
 	}
 
-	http.Redirect(w, r, "/", 302) // yea idk man
+	res, err := http.Get("/")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	res.Body.Close()
 }
 
 

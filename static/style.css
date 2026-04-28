@@ -27,6 +27,7 @@ input {
 }
 
 h1 {
+  padding: 16px;
   color: #FFFFFF;
   font-size: 20px;
   font-family: monospace;

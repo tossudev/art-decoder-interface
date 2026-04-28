@@ -4,6 +4,7 @@ import (
 	"strings"
 	"strconv"
 	"fmt"
+	"errors"
 )
 
 const (
@@ -15,7 +16,7 @@ const (
 )
 
 
-func Decode(input string) string {
+func Decode(input string) (error, string) {
 	output := ""
 	buffer := ""
 	bufferOpen := false
@@ -30,7 +31,7 @@ func Decode(input string) string {
 			if bufferOpen {
 				parsed := parseEncoding(buffer)
 				if parsed == ErrorMessage {
-					return ErrorMessage
+					return errors.New("moi"), ""
 				}
 
 				buffer = ""
@@ -38,7 +39,7 @@ func Decode(input string) string {
 				bufferOpen = false
 
 			} else {
-				return ErrorMessage
+				return errors.New("moi"), ""
 			}
 			continue
 		}
@@ -51,7 +52,7 @@ func Decode(input string) string {
 		output += string(letter)
 	}
 
-	return output
+	return nil, output
 }
 
 
