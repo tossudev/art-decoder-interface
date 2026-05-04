@@ -15,7 +15,8 @@
 				{{.HttpResponseText}}<br>
 			</p>
 
-			<p style="color: red;">{{.ErrorMessage}}</p>		
+			<p style="color: red;">{{.ErrorMessage}}</p>
+			<p style="color: green;">{{.InfoMessage}}</p>
 
 			<form method="POST" action="/decoder">
 				<textarea name="input" rows="40" cols="80">{{.Input}}</textarea>

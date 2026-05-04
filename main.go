@@ -14,6 +14,7 @@ type Page struct {
 	HttpResponse int
 	HttpResponseText string
 	ErrorMessage string
+	InfoMessage string
 }
 
 const (
@@ -41,12 +42,15 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 	inputType := r.FormValue("action")
 	output := ""
 	errorMessage := ""
+	infoMessage := ""
 
 	responseCode := 302
 
 	switch inputType {
 		case "Encode":
-			output = decoder.Encode(input)
+			var shortenedPercentage float32
+			output, shortenedPercentage = decoder.Encode(input)
+			infoMessage = fmt.Sprintf("Encoded string is %.1f%% shorter!", shortenedPercentage)
 			responseCode = 202
 
 		case "Decode":
@@ -56,7 +60,7 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				output = ""
 				responseCode = 400
-				errorMessage = "Decoder input malformed!"
+				errorMessage = "Malformed input!"
 			}
 	}
 
@@ -66,6 +70,7 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 		HttpResponse:		responseCode,
 		HttpResponseText:	StatusPrefix + strconv.Itoa(responseCode),
 		ErrorMessage:		errorMessage,
+		InfoMessage:		infoMessage,
 	}
 
 	w.WriteHeader(responseCode)

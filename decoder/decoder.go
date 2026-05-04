@@ -31,7 +31,7 @@ func Decode(input string) (error, string) {
 			if bufferOpen {
 				parsed := parseEncoding(buffer)
 				if parsed == ErrorMessage {
-					return errors.New("moi"), ""
+					return errors.New(ErrorMessage), ""
 				}
 
 				buffer = ""
@@ -39,7 +39,7 @@ func Decode(input string) (error, string) {
 				bufferOpen = false
 
 			} else {
-				return errors.New("moi"), ""
+				return errors.New(ErrorMessage), ""
 			}
 			continue
 		}
@@ -56,7 +56,7 @@ func Decode(input string) (error, string) {
 }
 
 
-func Encode(input string) string {
+func Encode(input string) (string, float32){
 	var buffer string
 	var output string
 	var skip int = 0
@@ -112,7 +112,9 @@ func Encode(input string) string {
 		}
 	}
 
-	return output
+	shortened := (1.0 - float32(len(output)) / float32(len(input))) * 100.0
+
+	return output, shortened
 }
 
 
