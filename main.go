@@ -50,7 +50,10 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 		case "Encode":
 			var shortenedPercentage float32
 			output, shortenedPercentage = decoder.Encode(input)
-			infoMessage = fmt.Sprintf("Encoded string is %.1f%% shorter!", shortenedPercentage)
+
+			if shortenedPercentage > 0.0 {
+				infoMessage = fmt.Sprintf("Encoded string is %.1f%% shorter!", shortenedPercentage)
+			}
 			responseCode = 202
 
 		case "Decode":
