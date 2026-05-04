@@ -3,6 +3,7 @@ package main
 import (
 	"interface/decoder"
 	"fmt"
+	"strconv"
 	"net/http"
 	"html/template"
 )
@@ -10,14 +11,20 @@ import (
 type Page struct {
 	Input string
 	Output string
-	HttpResponse string
+	HttpResponse int
+	HttpResponseText string
+	ErrorMessage string
 }
+
+const (
+	StatusPrefix string = "Status code: "
+)
 
 var pageData Page
 
 
 func main() {
-	http.HandleFunc("/decoder", FormHandler)
+	http.HandleFunc("POST /decoder", FormHandler)
 	http.HandleFunc("/", FrontendHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.ListenAndServe(":6969", nil)
@@ -33,33 +40,43 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 	input := r.FormValue("input")
 	inputType := r.FormValue("action")
 	output := ""
-	var err error
+	errorMessage := ""
+
+	responseCode := 302
 
 	switch inputType {
 		case "Encode":
 			output = decoder.Encode(input)
-		case "Decode":
-			err, output = decoder.Decode(input)
-	}
+			responseCode = 202
 
-	if err != nil {
-		output = ""
-		w.WriteHeader(400)
+		case "Decode":
+			var err error
+			err, output = decoder.Decode(input)
+			
+			if err != nil {
+				output = ""
+				responseCode = 400
+				errorMessage = "Decoder input malformed!"
+			}
 	}
 
 	pageData = Page{
-		Input: 			input,
-		Output: 		output,
-		HttpResponse:	"Response status",
-		//HttpResponse:	r.Response.Status,
+		Input: 				input,
+		Output: 			output,
+		HttpResponse:		responseCode,
+		HttpResponseText:	StatusPrefix + strconv.Itoa(responseCode),
+		ErrorMessage:		errorMessage,
 	}
 
-	res, err := http.Get("/")
-
-	if err != nil {
-		fmt.Println(err)
+	w.WriteHeader(responseCode)
+	
+	// force update site, this is horseshit but I couldn't figure out how to do it without redirect
+	tmpl, err2 := template.ParseFiles("index.html")
+	if err2 != nil {
+		fmt.Println("ERR:", err2)
 	}
-	res.Body.Close()
+
+	tmpl.Execute(w, pageData)
 }
 
 

@@ -12,9 +12,11 @@
 				A tool for compressing/decompressing ASCII art.<br>
 				Instructions and source on <a href="https://gitea.kood.tech/joonatanvahakangas/decoder">Github.</a><br>
 				<br>
-				{{.HttpResponse}}<br>
+				{{.HttpResponseText}}<br>
 			</p>
-			
+
+			<p style="color: red;">{{.ErrorMessage}}</p>		
+
 			<form method="POST" action="/decoder">
 				<textarea name="input" rows="40" cols="80">{{.Input}}</textarea>
 				
