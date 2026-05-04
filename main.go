@@ -11,7 +11,6 @@ import (
 type Page struct {
 	Input string
 	Output string
-	HttpResponse int
 	HttpResponseText string
 	ErrorMessage string
 	InfoMessage string
@@ -19,6 +18,7 @@ type Page struct {
 
 const (
 	StatusPrefix string = "Status code: "
+	Port string = "6969"
 )
 
 var pageData Page
@@ -28,7 +28,9 @@ func main() {
 	http.HandleFunc("POST /decoder", FormHandler)
 	http.HandleFunc("/", FrontendHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	http.ListenAndServe(":6969", nil)
+	
+	fmt.Println(fmt.Sprintf("Started server at: localhost:%s", Port))
+	http.ListenAndServe(":" + Port, nil)
 }
 
 
@@ -70,7 +72,6 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 	pageData = Page{
 		Input: 				input,
 		Output: 			output,
-		HttpResponse:		responseCode,
 		HttpResponseText:	StatusPrefix + strconv.Itoa(responseCode),
 		ErrorMessage:		errorMessage,
 		InfoMessage:		infoMessage,
@@ -79,16 +80,19 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(responseCode)
 	
 	// force update site, this is horseshit but I couldn't figure out how to do it without redirect
-	tmpl, err2 := template.ParseFiles("index.html")
-	if err2 != nil {
-		fmt.Println("ERR:", err2)
-	}
-
-	tmpl.Execute(w, pageData)
+	FrontendHandler(w, r)
 }
 
 
 func FrontendHandler(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path
+	fmt.Println(path)
+
+	if path != "/" && path != "/decoder" {
+		w.WriteHeader(404)
+		return
+	}
+
 	tmpl, err := template.ParseFiles("index.html")
 	if err != nil {
 		fmt.Println("ERR:", err)
@@ -96,3 +100,4 @@ func FrontendHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.Execute(w, pageData)
 }
+
