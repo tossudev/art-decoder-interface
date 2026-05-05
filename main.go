@@ -61,7 +61,8 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 		case "Decode":
 			var err error
 			err, output = decoder.Decode(input)
-			
+			responseCode = 202
+
 			if err != nil {
 				output = ""
 				responseCode = 400
