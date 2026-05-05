@@ -86,7 +86,6 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 
 func FrontendHandler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
-	fmt.Println(path)
 
 	if path != "/" && path != "/decoder" {
 		w.WriteHeader(404)

@@ -16,14 +16,29 @@ textarea {
   border-radius: 6px;
 }
 
+textarea:hover {
+	background: #2b2b2b;
+	color: #fff;
+	transition: all 400ms cubic-bezier(.47,2.0,.41,.1);
+	transform: scale(1.01);
+}
+
 input {
-  padding: 16px;
+  padding: 32px;
   font-size: 1rem;
   background: #1f1f1f;
   color: #eee;
   border: none;
   border-radius: 6px;
   resize: vertical;
+  margin: 6px;
+}
+
+input:hover {
+	background: #2b2b2b;
+	color: #fff;
+	transition: all 400ms cubic-bezier(.47,2.0,.41,.1);
+	transform: scale(1.15);
 }
 
 h1 {
