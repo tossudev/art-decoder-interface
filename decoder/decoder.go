@@ -60,6 +60,15 @@ func Encode(input string) (string, float32){
 	var buffer string
 	var output string
 	var skip int = 0
+	var searchLength int = repeatSearchLength
+
+	/*
+	if len(input) < searchLength {
+		searchLength = len(input) / 2
+	}
+	*/
+
+	searchLength = 3
 
 	for i, _ := range input {
 		if skip > 0 {
@@ -76,7 +85,7 @@ func Encode(input string) (string, float32){
 		// see more:
 		// https://en.wikipedia.org/wiki/String-searching_algorithm#Naive_string_search
 
-		for j := range repeatSearchLength {
+		for j := range searchLength {
 			// end of input, no more duplicates can be found
 			if i+j >= len(input) {
 				output += buffer
@@ -105,13 +114,13 @@ func Encode(input string) (string, float32){
 				index += len(buffer)
 			}
 
-			if duplicates > 2 {
+			if duplicates > 1 {
 				output += fmt.Sprintf("[%d %s]", duplicates, buffer)
 				skip = duplicates * len(buffer) - 1
 
 				break
 	
-			} else if j == repeatSearchLength - 1 {
+			} else if j == searchLength - 1 {
 				output += string(buffer[0])
 			}
 		}
