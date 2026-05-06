@@ -57,18 +57,18 @@ func Decode(input string) (error, string) {
 
 
 func Encode(input string) (string, float32){
+	if len(input) == 1 {
+		return input, 0.0
+	}
+
 	var buffer string
 	var output string
 	var skip int = 0
 	var searchLength int = repeatSearchLength
 
-	/*
 	if len(input) < searchLength {
 		searchLength = len(input) / 2
 	}
-	*/
-
-	searchLength = 3
 
 	for i, _ := range input {
 		if skip > 0 {
@@ -86,10 +86,9 @@ func Encode(input string) (string, float32){
 		// https://en.wikipedia.org/wiki/String-searching_algorithm#Naive_string_search
 
 		for j := range searchLength {
-			// end of input, no more duplicates can be found
+			// end of input
 			if i+j >= len(input) {
-				output += buffer
-				skip++
+				output += string(buffer[0])
 				break
 			}
 
@@ -101,7 +100,7 @@ func Encode(input string) (string, float32){
 			// check repeats
 			for {
 				// end of input, no more duplicates can be found
-				if index+len(buffer) >= len(input) {
+				if index+len(buffer) > len(input) {
 					break
 				}
 
