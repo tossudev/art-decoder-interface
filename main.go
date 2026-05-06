@@ -3,6 +3,7 @@ package main
 import (
 	"interface/decoder"
 	"fmt"
+	"time"
 	"strconv"
 	"net/http"
 	"html/template"
@@ -47,11 +48,16 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 	infoMessage := ""
 
 	responseCode := 302
+	timeStart := time.Now()
 
 	switch inputType {
 		case "Encode":
 			var shortenedPercentage float32
+			
 			output, shortenedPercentage = decoder.Encode(input)
+			
+			timeElapsed := time.Since(timeStart)
+			fmt.Println("Encoding took:", timeElapsed)
 
 			if shortenedPercentage > 0.0 {
 				infoMessage = fmt.Sprintf("Encoded string is %.1f%% shorter!", shortenedPercentage)
@@ -61,6 +67,10 @@ func FormHandler(w http.ResponseWriter, r *http.Request) {
 		case "Decode":
 			var err error
 			err, output = decoder.Decode(input)
+			
+			timeElapsed := time.Since(timeStart)
+			fmt.Println("Decoding took:", timeElapsed)
+			
 			responseCode = 202
 
 			if err != nil {

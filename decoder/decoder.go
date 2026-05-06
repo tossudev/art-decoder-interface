@@ -11,7 +11,7 @@ const (
 	bracketOpen rune = '['
 	bracketClose rune = ']'
 	delimiter string = " "
-	encodingPatternLength int = 3
+	repeatSearchLength int = 128
 	ErrorMessage string = "Error\n"
 )
 
@@ -69,9 +69,14 @@ func Encode(input string) (string, float32){
 
 		buffer = ""
 
-		// check a certain amount of characters for repetitions
-		// there is a better way to do this but am keeping it in since it works well enough
-		for j := range encodingPatternLength {
+		// check for repetitions up to some amount of characters
+		// the time complexity of this function becomes a problem when searching for longer patterns
+		// however, if the intended usage is only for short inputs this works fine
+
+		// see more:
+		// https://en.wikipedia.org/wiki/String-searching_algorithm#Naive_string_search
+
+		for j := range repeatSearchLength {
 			// end of input, no more duplicates can be found
 			if i+j >= len(input) {
 				output += buffer
@@ -100,13 +105,13 @@ func Encode(input string) (string, float32){
 				index += len(buffer)
 			}
 
-			if duplicates > 1 {
+			if duplicates > 2 {
 				output += fmt.Sprintf("[%d %s]", duplicates, buffer)
 				skip = duplicates * len(buffer) - 1
 
 				break
 	
-			} else if j == encodingPatternLength - 1 {
+			} else if j == repeatSearchLength - 1 {
 				output += string(buffer[0])
 			}
 		}
