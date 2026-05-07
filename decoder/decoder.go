@@ -114,8 +114,13 @@ func Encode(input string) (string, float32){
 			}
 
 			if duplicates > 1 {
-				output += fmt.Sprintf("[%d %s]", duplicates, buffer)
+				if len(buffer) <= 2 && duplicates <= 2 {
+					output += string(buffer[0])
+					break
+				}
+
 				skip = duplicates * len(buffer) - 1
+				output += fmt.Sprintf("[%d %s]", duplicates, buffer)
 
 				break
 	
